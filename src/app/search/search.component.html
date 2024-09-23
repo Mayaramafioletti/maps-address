@@ -1,0 +1,36 @@
+<div class="d-flex flex-column align-items-center justify-content-center">
+  <!-- Input de Endereço -->
+  <input #addresstext [(ngModel)]="address" (keyup)="searchAddress()" 
+         class="form-control mb-4 w-75" placeholder="Digite o endereço">
+
+  <!-- Alerta de endereço inválido -->
+  <div *ngIf="addressInvalid" class="alert alert-danger w-75" role="alert">
+    Endereço não é válido. Por favor, tente novamente.
+  </div>
+
+  <!-- Tabela de sugestões de endereços -->
+  <div *ngIf="suggestions.length > 0" class="w-75">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Endereço / Lugar Sugerido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)" class="cursor">
+          <td>{{ suggestion.formatted_address || suggestion.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Botão para carregar mais resultados -->
+    <div *ngIf="hasMoreResults" class="text-center mt-3">
+      <button (click)="loadMoreResults()" class="btn btn-primary">Carregar mais</button>
+    </div>
+  </div>
+
+  <!-- Botão para confirmar a seleção -->
+  <div *ngIf="selectedSuggestion" class="w-75 text-center mt-3 mb-3">
+    <button (click)="confirmSelection()" class="btn btn-success w-100">Confirmar</button>
+  </div>
+</div>

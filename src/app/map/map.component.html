@@ -1,0 +1,74 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Coluna da Tabela -->
+    <div class="col-md-6 m-3">
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark f-s">
+          <tr>
+            <th>ID</th>
+            <th>Endereço</th>
+            <th>Bairro</th>
+            <th>Cidade</th>
+            <th>Estado</th>
+            <th>CEP</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let element of enderecos; let i = index" (click)="onRowClick(element, i)" class="cursor-pointer f-s">
+            <td>{{ element.addressId }}</td>
+            <td>{{ element.address }}</td>
+            <td>{{ element.neighborhood }}</td>
+            <td>{{ element.city }}</td>
+            <td>{{ element.state }}</td>
+            <td>{{ element.zipcode }}</td>
+            <td>{{ element.lat }}</td>
+            <td>{{ element.lng }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Coluna do Input + Mapa -->
+    <div class="col-md-5 m-3 sticky">
+      <!-- Componente de busca -->
+      <app-search
+        [address]="enderecoSelecionado || selectedAddress"
+        (addressChange)="enderecoSelecionado = $event"
+        (confirmAddress)="substituirEndereco($event)"
+        (selectedPosition)="selectedPosition = $event">
+      </app-search>
+
+      <div *ngIf="selectedAddress" class="alert alert-info">
+        Endereço Selecionado: {{ selectedAddress }}
+      </div>
+
+      <div *ngIf="selectedAddress" class="mb-3">
+        <button (click)="confirmarEnderecoMapa()" class="btn btn-success">Confirmar Endereço</button>
+      </div>
+
+      <div *ngIf="location" class="map-container mb-4 cursor" style="height: 400px">
+        <google-map
+          [center]="center"
+          #map="googleMap"
+          height="100%"
+          width="100%"
+          (mapClick)="onMapClick($event)">
+          
+          <map-marker *ngIf="incorrectPosition"
+            [position]="incorrectPosition"
+            title="Endereço incorreto"
+            icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png">
+          </map-marker>
+
+          <map-marker *ngIf="selectedPosition"
+            [position]="selectedPosition"
+            title="Endereço sugerido"
+            icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png">
+          </map-marker>
+        </google-map>
+      </div>
+    </div>
+  </div>
+</div>
